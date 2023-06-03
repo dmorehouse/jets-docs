@@ -77,7 +77,7 @@
           {% else %}
           <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
           {% endif %}
-        {% endfor %}
+          {% endfor %}
         </ul>
       </li>
       <li><a href="{% link _docs/rack.md %}">Rack Compatible</a>
@@ -179,6 +179,36 @@
         <ul class="considerations">
           <li><a href="{% link _docs/considerations/api-gateway.md %}">API Gateway</a></li>
           <li><a href="{% link _docs/considerations/vpc.md %}">VPC</a></li>
+        </ul>
+      </li>
+      <li><a href="{% link _docs/thoughts.md %}">Thoughts</a>
+        <ul>
+          {% assign docs = site.docs | where: "categories","thoughts" | sort:"order" %}
+          {% for doc in docs -%}
+          {% if doc.subcategory %}
+          <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a>
+            <ul>
+              {% assign docs = site.docs | where: "categories",doc.subcategory | sort:"order" %}
+              {% for doc in docs -%}
+                {% if doc.subcategory %}
+                <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a>
+                  <ul>
+                    {% assign docs = site.docs | where: "categories",doc.subcategory | sort:"order" %}
+                    {% for doc in docs -%}
+                    <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          {% else %}
+          <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+          {% endif %}
+        {% endfor %}
         </ul>
       </li>
       <li><a href="{% link _docs/articles.md %}">Articles & Tutorials</a></li>

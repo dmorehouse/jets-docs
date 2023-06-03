@@ -1,0 +1,2 @@
+cfn.build.controllers | one_lambda_for_all_controllers | Other values: one_lambda_per_controller one_lambda_for_all_controllers
+cfn.build.routes | one_method_per_route | Other values: one_method_for_all_routes
