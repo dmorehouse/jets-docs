@@ -1,5 +1,7 @@
 ---
 title: Filtering Params
+category: config
+order: 2
 ---
 
 By default, all params and event payload will be logged to CloudWatch in every request. You can override this setting with `filtered_parameters` to

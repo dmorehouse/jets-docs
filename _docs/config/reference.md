@@ -1,5 +1,7 @@
 ---
 title: Config Reference
+category: config
+order: 88
 ---
 
 Here's a list of the available config settings.

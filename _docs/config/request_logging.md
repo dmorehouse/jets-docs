@@ -1,5 +1,7 @@
 ---
 title: Request Logging
+category: config
+order: 3
 ---
 
 By default, all params and event payload will be logged to CloudWatch in every request along with a completion log with the status code and duration of the request. You can over-ride each of these logs via the following:

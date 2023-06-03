@@ -1,5 +1,7 @@
 ---
 title: Forgery Protection
+category: config
+order: 1
 ---
 
 By default, csrf forgery protection is enabled in html mode and disabled in api mode. You can override the setting with `default_protect_from_forgery`.
