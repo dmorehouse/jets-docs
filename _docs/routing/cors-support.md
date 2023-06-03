@@ -2,18 +2,18 @@
 title: CORS Support
 ---
 
-Enabling CORS is simple.  You just set `config.cors` in the `config/application.rb` file.  Here's an example:
+Enabling CORS is simple.  You just set `config.api.cors.domain` in the `config/application.rb` file.  Here's an example:
 
 config/application.rb:
 
 ```ruby
 Jets.application.configure do
   # ...
-  config.cors = true
+  config.api.cors.domain = true
 end
 ```
 
-A `config.cors = true` will add a response header with `Access-Control-Allow-Origin='*'`.
+A `config.api.cors.domain = true` will add a response header with `Access-Control-Allow-Origin='*'`.
 
 ### Specific Domain
 
@@ -22,7 +22,7 @@ If you would like more specificity for the `Access-Control-Allow-Origin` header 
 ```ruby
 Jets.application.configure do
   # ...
-  config.cors = "*.mydomain.com"
+  config.api.cors.domain = "*.mydomain.com"
 end
 ```
 
@@ -30,24 +30,24 @@ The example above adds a response header with `Access-Control-Allow-Origin='*.my
 
 ### Full Customization
 
-If you need full customization of the CORS response headers, you can set `config.cors` as a Hash.
+If you need full customization of the CORS response headers, you can set `config.api.cors.domain` as a Hash.
 
 ```ruby
 Jets.application.configure do
   # ...
-  config.cors = {
+  config.api.cors.domain = {
     "access-control-allow-origin" => "*.mydomain.com",
     "access-control-allow-credentials" => true,
   }
 end
 ```
 
-If you need to control the extra headers added as part pre-flight OPTIONS request you can set `config.cors_preflight`:
+If you need to control the extra headers added as part pre-flight OPTIONS request you can set `config.api.cors.domain_preflight`:
 
 ```ruby
 Jets.application.configure do
   # ...
-  config.cors_preflight = {
+  config.api.cors.domain_preflight = {
     "access-control-allow-methods" => "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
     "access-control-allow-headers" => "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
   }
@@ -61,7 +61,7 @@ By default, OPTIONS requests will have an `authorization_type = "NONE"`. This al
 ```ruby
 Jets.application.configure do
   # ...
-  config.api.cors_authorization_type = "CUSTOM" # default is "NONE"
+  config.api.cors.domain_authorization_type = "CUSTOM" # default is "NONE"
 end
 ```
 
