@@ -14,18 +14,19 @@ class MainAuthorizer < ApplicationAuthorizer
     type: :request, # valid values: token, cognito_user_pools, request. Jets upcases internally.
   )
   def protect
+    puts "event #{JSON.dump(event)}" # Example event payload https://bit.ly/3Nbr2Dp
     # Must conform to Amazon API Gateway Lambda Authorizer Output structure
     # https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-lambda-authorizer-output.html
     resource = event[:methodArn] # IE: arn:aws:execute-api:us-west-2:112233445566:ymy8tbxw7b/*/GET/my/path"
     {
-      "principalId" => "current_user_id", # replace with the current user id
-      "policyDocument" => {
-        "Version" => "2012-10-17",
-        "Statement" => [
+      principalId: "current_user_id", # replace with the current user id
+      policyDocument: {
+        Version: "2012-10-17",
+        Statement: [
           {
-            "Action" => "execute-api:Invoke",
-            "Effect" => "Allow",
-            "Resource" => resource
+            Action: "execute-api:Invoke",
+            Effect: "Allow",
+            Resource: resource
           }
         ]
       }
