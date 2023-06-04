@@ -227,7 +227,16 @@ The expanded IAM Policy documents gets included into the CloudFormation template
 * [AWS IAM Policies and Permissions docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#access_policies-json)
 * [CloudFormation IAM Policy reference docs](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-policy.html)
 
+## One Lambda For All Conrollers
+
+When using [config.cfn.build.controllers = "one_lambda_for_all_controllers"]({% link _docs/config/cfn.md %}), Jets builds only a single Lambda Function instead of many. Hence the `iam_policy` definitions cannot be applied at the individual function level. There is only a single Lambda Function.
+
+In this case, Jets will print and warning and tell you to either use the Application-wide IAM policy in `config/application.rb`. You also define your IAM policy at the `ApplicationController`.
+
+## One Lambda Per Conroller
+
+When using [config.cfn.build.controllers = "one_lambda_per_controller"]({% link _docs/config/cfn.md %}), Jets builds Lambda Function for each controller. Hence the `iam_policy` definitions cannot be applied at the individual function level. You can use the `class_iam_policy` though.
+
 ## Lambda Function vs User Deploy IAM Policies
 
 The IAM Policies docs on this page refer to the IAM policy associated with your **Lambda Execution Role**. These permissions control what AWS resources your Lambda functions have access to.  This is different from the IAM role you use to deploy a Jets application, which is typically your IAM User permissions. If you are looking for the minimal IAM Policy to deploy a Jets application for your IAM user, check out [Minimal Deploy IAM Policy]({% link _docs/extras/minimal-deploy-iam.md %}).
-

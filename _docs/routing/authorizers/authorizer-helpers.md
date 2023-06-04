@@ -96,7 +96,7 @@ class MainAuthorizer < ApplicationAuthorizer
         statement: [
           action: "execute-api:Invoke",
           effect: "Allow",
-          resource: resource,
+          resource: method_arn,
         ],
       },
       context: {
