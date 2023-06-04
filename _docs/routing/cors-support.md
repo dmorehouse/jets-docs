@@ -1,5 +1,7 @@
 ---
 title: CORS Support
+category: routing
+order: 5
 ---
 
 Enabling CORS is simple.  You just set `config.api.cors.domain` in the `config/application.rb` file.  Here's an example:

@@ -1,5 +1,7 @@
 ---
 title: Mount Rack Apps
+category: routing
+order: 3
 ---
 
 Jets Routing supports mounting Rack applications. Example:

@@ -1,5 +1,7 @@
 ---
 title: Authorizer Tips
+category: authorizers
+order: 2
 ---
 
 Here are some tips for working with API Gateway Authorizers. The tips may help those who are newer to API Gateway Authorizers.

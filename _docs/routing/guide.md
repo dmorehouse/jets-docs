@@ -1,5 +1,7 @@
 ---
 title: Routing Guide
+category: routing
+order: 1
 ---
 
 {:.toc}

@@ -1,5 +1,7 @@
 ---
 title: Authorizer Caching
+category: authorizers
+order: 3
 ---
 
 You can cache the authorizer with the `ttl` convenience property. This means the Authorizer lambda function will not be called again until the ttl expires. Example:

@@ -1,5 +1,8 @@
 ---
 title: Authorizers
+category: routing
+subcategory: authorizers
+order: 2
 ---
 
 Jets supports writing [Lambda Authorizers](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html).  You define them in the `app/authorizers` folder. Here's an example:

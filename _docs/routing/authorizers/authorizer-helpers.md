@@ -1,5 +1,7 @@
 ---
 title: Authorizer Helpers
+category: authorizers
+order: 1
 ---
 
 The Authorizer Lambda function must return a response that conforms to the [Amazon API Gateway Lambda Authorizer Output](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-lambda-authorizer-output.html).  Jets provides some Authorizer Helpers to help generate the policy document response. Here's a simple complete example:

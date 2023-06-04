@@ -34,20 +34,32 @@
       </li>
       <li><a href="{% link _docs/routing/overview.md %}">Routing</a>
         <ul>
-          <li><a href="{% link _docs/routing/guide.md %}">Guide</a></li>
-          <li><a href="{% link _docs/routing/authorizers.md %}">Authorizers</a>
+          {% assign docs = site.docs | where: "categories","routing" | sort:"order" %}
+          {% for doc in docs -%}
+          {% if doc.subcategory %}
+          <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a>
             <ul>
-              <li><a href="{% link _docs/routing/authorizers/authorizer-helpers.md %}">Authorizer Helpers</a></li>
-              <li><a href="{% link _docs/routing/authorizers/authorizer-tips.md %}">Authorizer Tips</a></li>
-              <li><a href="{% link _docs/routing/authorizers/authorizer-caching.md %}">Authorizer Caching</a></li>
-              <li><a href="{% link _docs/routing/authorizers/authorizer-cognito.md %}">Authorizer Cognito</a></li>
-              <li><a href="{% link _docs/routing/authorizers/authorization-types.md %}">Authorization Types</a></li>
-              <li><a href="{% link _docs/routing/authorizers/authorization-scopes.md %}">Authorization Scopes</a></li>
+              {% assign docs = site.docs | where: "categories",doc.subcategory | sort:"order" %}
+              {% for doc in docs -%}
+                {% if doc.subcategory %}
+                <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a>
+                  <ul>
+                    {% assign docs = site.docs | where: "categories",doc.subcategory | sort:"order" %}
+                    {% for doc in docs -%}
+                    <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+                {% endif %}
+              {% endfor %}
             </ul>
           </li>
-          <li><a href="{% link _docs/routing/mount.md %}">Mount Rack Apps</a></li>
-          <li><a href="{% link _docs/routing/custom-domain.md %}">Custom Domain</a></li>
-          <li><a href="{% link _docs/routing/cors-support.md %}">CORS Support</a></li>
+          {% else %}
+          <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+          {% endif %}
+          {% endfor %}
         </ul>
       </li>
       <li><a href="{% link _docs/config.md %}">Config</a>

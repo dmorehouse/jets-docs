@@ -1,5 +1,7 @@
 ---
 title: Authorization Scopes
+category: authorizers
+order: 6
 ---
 
 Authorization Scopes are support by Cognito authorizers. You can configure the OAuth2 scope in the Gateway API Method Request in two ways.

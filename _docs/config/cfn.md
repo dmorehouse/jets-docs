@@ -39,7 +39,10 @@ end
 
 You can tell jets to build a single catchall APIGW Method instead and essentially use APIGW as a proxy. This is achieve with `config.cfn.build.routes = "one_method_for_all_routes"`.
 
-Note: When `one_method_for_all_routes` is enabled, then `config.cfn.build.controllers = "one_lambda_for_all_controllers"`.
+Notes when `one_method_for_all_routes` is set:
+
+* Jets automatically sets `config.cfn.build.controllers = "one_lambda_for_all_controllers"` no matter what value you set. This is the only value that makes sense since Jets collapses all the APIGW Methods down to one.
+* Authorizers should only be set at the `root` and `catchall` route. Jets only respects them there. See: [Authorizers One Method]({% link _docs/routing/authorizers/one-method.md %})
 
 {% include config/reference/header.md %}
 {% include config/reference/cfn.md %}
