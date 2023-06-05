@@ -21,13 +21,13 @@ What happens is that Jets takes the `rate` method, performs some wrapper logic, 
 class HardJob < ApplicationJob
   resource(
     "{namespace}EventsRule": {
-      type: "AWS::Events::Rule",
-      properties: {
-        schedule_expression: "rate(10 hours)",
-        state: "ENABLED",
-        targets: [{
-          arn: "!GetAtt {namespace}LambdaFunction.Arn",
-          id: "{namespace}RuleTarget"
+      Type: "AWS::Events::Rule",
+      Properties: {
+        ScheduleExpression: "rate(10 hours)",
+        State: "ENABLED",
+        Targets: [{
+          Arn: "!GetAtt {namespace}LambdaFunction.Arn",
+          Id: "{namespace}RuleTarget"
         }]
       }
     }
@@ -49,14 +49,14 @@ The final code looks something like this:
 ```ruby
 class HardJob < ApplicationJob
   resource(
-    "DigEventsRule": {
-      type: "AWS::Events::Rule",
-      properties: {
-        schedule_expression: "rate(10 hours)",
-        state: "ENABLED",
-        targets: [{
-          arn: "!GetAtt DigLambdaFunction.Arn",
-          id: "DigRuleTarget"
+    HardJobDigEventsRule: {
+      Type: "AWS::Events::Rule",
+      Properties: {
+        ScheduleExpression: "rate(10 hours)",
+        State: "ENABLED",
+        Targets: [{
+          Arn: "!GetAtt HardJobDigLambdaFunction.Arn",
+          Id: "HardJobDigRuleTarget"
         }]
       }
     }
@@ -69,5 +69,6 @@ end
 
 The `resource` method creates the [AWS::Events::Rule](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html) as a CloudFormation resource. The keys of the Hash structure use the underscore format following Ruby naming convention. As part of CloudFormation template processing, the underscored keys are camelized.
 
-Understanding the core `resource` model is key to unlocking the power of full customization to a Jets application. Once you get used to the `resource` method, you could start defining your own custom convenience resource methods that wrap the `resource` method for more concise code as [Associated Resources Extensions]({% link _docs/function-resources/function-resources-extensions.md %}).
+Understanding the core `resource` model is key to unlocking the power of full customization to a Jets application. Once you get used to the `resource` method, you could start defining your own custom convenience resource methods that wrap the `resource` method for more concise code as [Associated Resources Extensions]({% link _docs/custom/function-resources/function-resources-extensions.md %}).
 
+{% include custom/camelcase-note.md %}

@@ -24,14 +24,14 @@ What's happens is that Jets takes the `rate` method, performs some wrapper logic
 ```ruby
 class HardJob < ApplicationJob
   resource(
-    "DigEventsRule": {
-      type: "AWS::Events::Rule",
-      properties: {
-        schedule_expression: "rate(10 hours)",
-        state: "ENABLED",
-        targets: [{
-          arn: "!GetAtt DigLambdaFunction.Arn",
-          id: "DigRuleTarget"
+    HardJobDigEventsRule: {
+      Type: "AWS::Events::Rule",
+      Properties: {
+        ScheduleExpression: "rate(10 hours)",
+        State: "ENABLED",
+        Targets: [{
+          Arn: "!GetAtt HardJobDigLambdaFunction.Arn",
+          Id: "HardJobDigRuleTarget"
         }]
       }
     }
@@ -46,3 +46,4 @@ The `resource` method creates the [AWS::Events::Rule](https://docs.aws.amazon.co
 
 With this design, you can create any resource with Jets and associate them with your Lambda functions. Once you understand how the `resource` method works, you can define any resource that you required. Methods like `rate`, `cron`, `rule_event` simply run some setup logic and call the `resource` method.
 
+{% include custom/camelcase-note.md %}

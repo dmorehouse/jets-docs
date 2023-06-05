@@ -17,7 +17,7 @@ module SqsExtension
 end
 ```
 
-After the module is defined, you can use the method in your [Shared Resource]({% link _docs/shared-resources.md %}) like so:
+After the module is defined, you can use the method in your [Shared Resource]({% link _docs/custom/shared-resources.md %}) like so:
 
 app/shared/resources/list.rb
 

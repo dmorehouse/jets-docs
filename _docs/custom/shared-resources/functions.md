@@ -74,8 +74,8 @@ The methods `ruby_function`, `python_function`, and `node_function` all delegate
 ```ruby
 class Custom < Jets::Stack
   function(:kevin,
-    handler: "kevin.lambda_handler",
-    runtime: "ruby2.5"
+    Handler: "kevin.lambda_handler",
+    Runtime: "ruby2.7"
   )
 end
 ```
@@ -85,13 +85,12 @@ And the `function` method calls the general Jets::Stack `resource` method.  So t
 ```ruby
 class Custom < Jets::Stack
   resource(:kevin,
-    code: {
-      s3_bucket: "!Ref S3Bucket",
-      s3_key: code_s3_key
+    Code: {
+      S3Bucket: "!Ref S3Bucket",
+      S3Key: code_s3_key
     },
-    handler: "kevin.lambda_handler",
-    runtime: "ruby2.5"
+    Handler: "kevin.lambda_handler",
+    Runtime: "ruby2.7"
   )
 end
 ```
-

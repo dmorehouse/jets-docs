@@ -52,8 +52,8 @@ def thermostat_rule(logical_id, props={})
   # ...
   resource(
     logical_id : {
-      type: "AWS::IoT::TopicRule",
-      properties: props
+      Type: "AWS::IoT::TopicRule",
+      Properties: props
     }
   )
 end
@@ -65,8 +65,8 @@ end
 def thermostat_rule(logical_id, props={})
   # ...
   resource(logical_id,
-    type: "AWS::IoT::TopicRule",
-    properties: props
+    Type: "AWS::IoT::TopicRule",
+    Properties: props
   )
 end
 ```

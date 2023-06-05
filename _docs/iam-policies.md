@@ -99,7 +99,7 @@ Jets.application.configure do |config|
 end
 ```
 
-This **adds** to the Jets default application IAM policy. This is useful because the default application IAM policy is dynamically calculated depending on what the resources are being provisioned.  For example, using [Shared Resources]({% link _docs/shared-resources.md %}) will add CloudFormation read permissions.
+This **adds** to the Jets default application IAM policy. This is useful because the default application IAM policy is dynamically calculated depending on what the resources are being provisioned.  For example, using [Shared Resources]({% link _docs/custom/shared-resources.md %}) will add CloudFormation read permissions.
 
 ## Application-wide: Override Entirely
 

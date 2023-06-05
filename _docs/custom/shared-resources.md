@@ -2,7 +2,7 @@
 title: Shared Resources
 ---
 
-Shared resources are how you create **standalone** custom AWS resources with Jets.  With the [Associated Resources]({% link _docs/function-resources.md %}), you can add custom AWS resources which are associated with Lambda functions.  Shared resources are also fully customizable AWS resources, but they are not as tightly associated with a Lambda function. Understanding Shared Resources will allow you to customize a Jets application with any custom resource.
+Shared resources are how you create **standalone** custom AWS resources with Jets.  With the [Associated Resources]({% link _docs/custom/function-resources.md %}), you can add custom AWS resources which are associated with Lambda functions.  Shared resources are also fully customizable AWS resources, but they are not as tightly associated with a Lambda function. Understanding Shared Resources will allow you to customize a Jets application with any custom resource.
 
 ## SNS Topic Example
 
@@ -45,10 +45,10 @@ In the SNS Topic example above we use the `sns_topic` convenience method to crea
 ```ruby
 class Resource < Jets::Stack
   resource(
-    "DeliveryCompleted": {
-      type: "AWS::SNS::Topic",
-      properties: {
-        display_name: "cool topic"
+    DeliveryCompleted: {
+      Type: "AWS::SNS::Topic",
+      Properties: {
+        DisplayName: "cool topic"
       }
     }
   )
@@ -56,7 +56,7 @@ class Resource < Jets::Stack
 end
 ```
 
-The Jets::Stack `resource` method is similar to [Custom Associated Resources's]({% link _docs/function-resources.md %}) `resource` method. It follows a similar expansion pattern.  With it, you can create any AWS resource in your Jets application. You can also create your own convenience wrapper methods and call `resource` and `output` as required: [Shared Resource Extensions]({% link _docs/shared-resources/extensions.md %}).
+The Jets::Stack `resource` method is similar to [Custom Associated Resources's]({% link _docs/custom/function-resources.md %}) `resource` method. It follows a similar expansion pattern.  With it, you can create any AWS resource in your Jets application. You can also create your own convenience wrapper methods and call `resource` and `output` as required: [Shared Resource Extensions]({% link _docs/custom/shared-resources/extensions.md %}).
 
 ## IAM Permission
 
