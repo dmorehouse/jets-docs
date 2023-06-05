@@ -14,7 +14,7 @@ There are pros and cons to using a single function vs multiple functions.
 
 Pros for single function:
 
-* **Quicker deploys**. Only one function needs to be updated. Have seen users deploy Jets apps with 500+ lambda functions. Here's a [PR]((https://github.com/boltops-tools/jets/pull/357)) that tests the APIGW resources side of it. Though apps can get as large as you want, deploying so many resources will slow down deploy times. Apps with 500+ lambda functions and hundreds of APIGW resources can take 8 minutes to deploy. An app iwth a single function can take under 2m.
+* **Quicker deploys**. Only one function needs to be updated. Have seen users deploy Jets apps with 500+ lambda functions. Here's a [PR: paginate api gateway resources to support more routes for large apps #357](https://github.com/boltops-tools/jets/pull/357) that tests the APIGW resources side of it. Though apps can get as large as you want, deploying so many resources will slow down deploy times. Apps with 500+ lambda functions and hundreds of APIGW resources can take 8 minutes to deploy. An app iwth a single function can take under 2m.
 * **Prewarming**: Prewarming becomes less of a problem. Since all controller actions hit the **same** lambda function. The function is pretty much always warm. You may hit the AWS Account default Lambda concurrency limit of 2,000 quicker, but 2000 processes is pretty high. Think 2000 containers.
 * **Logs**: You only have to look for logs in one single function. It's more centralized in this sense.
 
