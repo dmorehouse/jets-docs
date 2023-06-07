@@ -4,9 +4,9 @@ title: Managed IAM Policies
 
 Jets also supports [Managed IAM Policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html). Managed IAM policies are managed by AWS. This is nice because when AWS releases new features with new API methods, AWS will update the IAM policy accordingly and we don't have to update the policy ourselves.  Managed polices are simple to use with Jets. Here are the ways you can set managed policies and their precedence:
 
-1. Function specific Managed IAM policy: highest precedence
-2. Class-wide Managed IAM policy
-3. Application-wide Managed IAM policy: lowest precedence
+{% include iam/precedence.md %}
+
+{% include iam/cfn-setting.md %}
 
 ## Function specific Managed IAM policy
 
@@ -41,6 +41,21 @@ Jets.application.configure do |config|
     IAMReadOnlyAccess
   ]
 end
+```
+
+## IAM DSL Multiple Calls
+
+When you call `class_iam_policy` multiple times, it appends permissions for that specific function. Example:
+
+```ruby
+class_iam_policy("AmazonS3ReadOnlyAccesss3")
+class_iam_policy("CloudFrontReadOnlyAccess")
+```
+
+The same as:
+
+```ruby
+class_iam_policy("AmazonS3ReadOnlyAccess", "CloudFrontReadOnlyAccess")
 ```
 
 ## Managed IAM Policies Inheritance

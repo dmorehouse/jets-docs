@@ -1,5 +1,7 @@
 ---
 title: Polymorphic Python
+nav_text: Python
+category: polymorphic
 ---
 
 Polymorphic support for python works like so for the controller code:
@@ -30,7 +32,7 @@ def response(message, status_code):
         'statusCode': str(status_code),
         'body': json.dumps(message),
         'headers': {
-            'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
         }
 ```

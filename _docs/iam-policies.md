@@ -4,9 +4,9 @@ title: IAM Policies
 
 Jets provides several ways to finely control the IAM policies associated with your Lambda functions. Here are the ways and their precedence:
 
-1. Function-specific IAM policy: highest precedence
-2. Class-wide IAM policy
-3. Application-wide IAM policy: lowest precedence
+{% include iam/precedence.md %}
+
+{% include iam/cfn-setting.md %}
 
 ## Function specific IAM policy
 
@@ -118,6 +118,21 @@ end
 ```
 
 Note, be careful using this advanced technique because it will override the IAM default policy entirely. It could prevent the Jets application from working right because it doesn't have enough permissions. You must make sure that the policy has the right permissions.
+
+## IAM DSL Multiple Calls
+
+When you call `iam_policy` multiple times, it appends permissions for that specific function. Example:
+
+```ruby
+iam_policy("s3")
+iam_policy("sns")
+```
+
+The same as:
+
+```ruby
+iam_policy("s3", "sns")
+```
 
 ## IAM Policy Definition Styles
 

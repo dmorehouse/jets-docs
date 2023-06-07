@@ -151,6 +151,39 @@
           <li><a href="{% link _docs/custom/shared-resources/functions.md %}">Shared Functions</a></li>
         </ul>
       </li>
+
+      <li><a href="{% link _docs/assets.md %}">Assets</a>
+        <ul>
+          {% assign docs = site.docs | where: "categories","assets" | sort:"order" %}
+          {% for doc in docs -%}
+          {% if doc.subcategory %}
+          <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a>
+            <ul>
+              {% assign docs = site.docs | where: "categories",doc.subcategory | sort:"order" %}
+              {% for doc in docs -%}
+                {% if doc.subcategory %}
+                <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a>
+                  <ul>
+                    {% assign docs = site.docs | where: "categories",doc.subcategory | sort:"order" %}
+                    {% for doc in docs -%}
+                    <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          {% else %}
+          <li><a href="{{ doc.url }}">{% if doc.nav_text %}{{ doc.nav_text }}{% else %}{{ doc.title }}{% endif %}</a></li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+      </li>
+
+
       <li><a href="{% link _docs/extras.md %}">Extras</a>
         <ul>
           {% assign docs = site.docs | where: "categories","extras" | sort:"order" %}
@@ -181,10 +214,10 @@
         {% endfor %}
         </ul>
       </li>
-      <li><a href="{% link _docs/polymorphic-support.md %}">Polymorphic Functions</a>
+      <li><a href="{% link _docs/polymorphic.md %}">Polymorphic Functions</a>
         <ul class="poly-support">
-          <li><a href="{% link _docs/polymorphic-python.md %}">Python</a></li>
-          <li><a href="{% link _docs/polymorphic-node.md %}">Node</a></li>
+          <li><a href="{% link _docs/polymorphic/python.md %}">Python</a></li>
+          <li><a href="{% link _docs/polymorphic/node.md %}">Node</a></li>
         </ul>
       </li>
       <li><a href="{% link _docs/considerations.md %}">Considerations</a>

@@ -16,6 +16,7 @@ The following table summarizes the releases and upgrade paths.
 
 Version | Notes | Blue-Green? | Run jets upgrade?
 --- | --- | --- | ---
+5.0.0 | Major Jets Architecture changes were made. | Yes | No
 4.0.0 | Ruby 3.2 Support was added in this release. Upgrading notes only applies to if you're switching to the Ruby 3.2 Runtime. And most of it will be making sure your app can run on Ruby 3.2. The reason a blue-green deploy might be required is because of [PreheatJob: fix function lookups and iam function permission #645](https://github.com/boltops-tools/jets/pull/645). If you're using the [iam_polices]({% link _docs/iam-policies.md %}), it'll require a blue-green deployment. | Depends | No
 3.0.14 | Using @rubyonjets/ujs-compat. Will need to make some manual changes. See details below. Manually changes are not needed for newly generated projects. | No | No
 3.0.12 | Using @rails/ujs. Will need to make some manual changes. See details below. Manually changes are not needed for newly generated projects. | No | No
@@ -33,6 +34,18 @@ Version | Notes | Blue-Green? | Run jets upgrade?
 ## Upgrade Details
 
 The following section provides a little more detail on each version upgrade. Note, not all versions required more details.
+
+### 5.0.0
+
+There's a handy new `JETS_RESET=1` that can be used to an in-place blue-green deployment. It's covered in [blue-green deployment docs]({% link _docs/extras/blue-green-deployment.md %}).
+
+In Jets v5, Jets will construct CloudFormations templates that result in one lambda function for controllers and essentially one APIGW proxy route. Reasons for this is discussed here:
+
+* [CloudFormation Many Lambda Functions Thoughts]()
+*
+*
+
+
 
 ### 3.0.14
 

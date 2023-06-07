@@ -1,8 +1,8 @@
 ---
 title: "Assets Serving: Webpack"
 nav_text: Webpacker
-category: extra-assets
-order: 1
+category: assets
+order: 99
 ---
 
 ## Pros and Cons

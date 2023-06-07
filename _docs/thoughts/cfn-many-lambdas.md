@@ -1,12 +1,12 @@
 ---
-title: CloudFormation Multiple or Few Lambda Functions Thoughts
+title: CloudFormation Many Lambda Functions Thoughts
 nav_text: How Many Lambdas?
 desc: Whether or not to collapse the number of Lambda functions down to one or have multiple Lambda functions.
 category: thoughts
 order: 1
 ---
 
-Jets v5 introduced the ability to reduce the number Lambda functions deploy by collapsing it down with [config.cfn.build.controllers]({% link _docs/config/cfn.md %}).
+Jets v5 introduced the ability to reduce the number Lambda functions deployed by collapsing it down with [config.cfn.build.controllers]({% link _docs/config/cfn.md %}).
 
 ## Pros and Cons
 

@@ -5,13 +5,13 @@ category: authorizers
 order: 7
 ---
 
-When you use [one_method_for_all_routes]({% link _docs/config/cfn.md %}) and tell Jets to build only one APIGW Methods for all routes, IE:
+When you use [one_apigw_method_for_all_routes]({% link _docs/config/cfn.md %}) and tell Jets to build only one APIGW Methods for all routes, IE:
 
 config/application.rb
 
 ```ruby
 Jets.application.configure do
-  config.cfn.build.routes = "one_method_for_all_routes" # only works with one_lambda_for_all_controllers
+  config.cfn.build.routes = "one_apigw_method_for_all_routes" # only works with one_lambda_for_all_controllers
 end
 ```
 

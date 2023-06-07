@@ -1,5 +1,7 @@
 ---
 title: Polymorphic Node
+nav_text: Node
+category: polymorphic
 ---
 
 To write your Jets Lambda functions in node, it would look like this:

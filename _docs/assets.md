@@ -1,8 +1,7 @@
 ---
 title: Assets Serving
-category: extras
-subcategory: extra-assets
-order: 2
+subcategory: assets
+order: 1
 ---
 
 Jets handles asset serving by uploading asset files to s3 and serving them directly from s3. This is particularly beneficial for binary assets like images as s3 is better suited for serving them.
@@ -31,7 +30,7 @@ When deployed to lambda, the file is served out of s3 and looks like this:
 
 ## Caching Considerations
 
-Even though `public/assets` and `public/images` files are uploaded and served for convenience.  There's a cavaet with the approach. The files in the `public/assets` and `public/images` do not get sha checksum added to their paths.  This makes it more difficult to cache the assets with longer TTLs. Even with short TTLs, some browsers and devices like iPhone seem to cache images indefinitely.  Consider using webpacker for your assets so that sha checksum are include as part of the path. Note, webpacker has it's own cavaets. See: [Assets Serving: Webpack]({% link _docs/extras/assets/webpacker.md %}).
+Even though `public/assets` and `public/images` files are uploaded and served for convenience.  There's a cavaet with the approach. The files in the `public/assets` and `public/images` do not get sha checksum added to their paths.  This makes it more difficult to cache the assets with longer TTLs. Even with short TTLs, some browsers and devices like iPhone seem to cache images indefinitely.  Consider using webpacker for your assets so that sha checksum are include as part of the path. Note, webpacker has it's own cavaets. See: [Assets Serving: Webpack]({% link _docs/assets/webpacker.md %}).
 
 ## Configure Settings
 
