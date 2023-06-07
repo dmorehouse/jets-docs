@@ -197,6 +197,6 @@ How Javascript importmap loading works:
 2. The importmap from `<script type="importmap">` essentially points `application` to `app/javascript/application.js`.
 3. From that point on, it's pure Javascript import and loading.
 4. If more `import` are keywords are found in `application.js`, they get loaded via the same importmap defined at the top.
-5. The cycle repeats until there are not more `import` keywords are encountered.
+5. The cycle repeats until there are no more `import` keywords are encountered.
 
 The DSL in `config/importmap.rb` is the source-of-truth and defines where module files should come from. You should update it when you add and use `import` keywords in your javascript files like `app/javascript/application.js`.
