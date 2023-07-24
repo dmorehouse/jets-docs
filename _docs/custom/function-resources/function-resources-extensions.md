@@ -28,6 +28,8 @@ module IotExtension
 end
 ```
 
+Note: Astute users may noticed that underscore for the keys is used. This allows the user to use underscore when using `thermostat_rule`, once `props` reaches the `resource` call, the resource call will internally camelize the keys. If the helper is meant to be user-facing, then underscore is probably what Ruby-ist would use. If you're writing internal Jets code, CamelCalse is used since we're working closely with CloudFormation properties.
+
 After the module is defined, you can use the newly created convenience method like so:
 
 ```ruby

@@ -6,6 +6,8 @@ order: 3
 
 Jets Routing supports mounting Rack applications. Example:
 
+config/routes.rb
+
 ```ruby
 Jets.application.routes.draw do
   mount GrapeApp, at: 'grape'     # app/racks/grape_app
@@ -17,6 +19,19 @@ end
 Many Ruby Web frameworks are Rack compatible like [Sinatra](http://sinatrarb.com/), [Grape](http://www.ruby-grape.org), [Padrino](http://padrinorb.com/), [Hanami](https://hanamirb.org), and [more](https://www.phusionpassenger.com/library/deploy/config_ru.html). The mount ability allows you to run them on serverless with minimal effort.
 
 Note: The Rack apps do not have reside in the `app/racks` folder. They only need to be in a folder that is autoloaded.
+
+## Mount Hash Notation
+
+You can also use the hash notation to mount apps.
+
+config/routes.rb
+
+```ruby
+Jets.application.routes.draw do
+  mount RackApp => 'rack'
+  # mount RackApp, at: 'rack' # same thing
+end
+```
 
 ## Examples
 

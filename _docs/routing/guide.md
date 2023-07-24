@@ -26,6 +26,7 @@ order: 1
   * [9.3 module example](#93-module-example)
 - [10. Mount Rack Apps](#10-mount-rack-apps)
 - [11. Configuring Host](#11-configuring-host)
+- [12. Root](#12-root)
 
 ## 1. Introduction
 
@@ -576,6 +577,8 @@ Only the controller module is affected.
 
 Jets supports mounting Rack applications. This allows you to run most Rack compatible on serverless with little effort. Example:
 
+config/routes.rb
+
 ```ruby
 Jets.application.routes.draw do
   mount RackApp, at: 'rack'  # app/racks/rack_app
@@ -588,9 +591,30 @@ More info: [Mount Rack Apps docs]({% link _docs/routing/mount.md %})
 
 The named routes `_url` methods, will infer the hostname from the request by default.  If you need to configure it explicitly, then you can with `config.helpers.host`. Example:
 
+config/application.rb
+
 ```ruby
 Jets.application.configure do
   config.helpers.host = "http://example.com:8888" # default is nil, which means it'll be inferred from the request
 end
 ```
 
+## 12. Root
+
+You can specify the root or homepage path with the `root` method.
+
+config/routes.rb
+
+```ruby
+Jets.application.routes.draw do
+  root to: "articles#index"
+end
+```
+
+You can also provide just a string to the `root` method:
+
+```ruby
+Jets.application.routes.draw do
+  root "home#index"
+end
+```

@@ -42,7 +42,7 @@ In the second pass, Jets replaces the `{namespace}` with an identifier a value t
 
 Before | After
 --- | ---
-{namespace} | Dig
+{namespace} | HardJobDig
 
 The final code looks something like this:
 

@@ -137,14 +137,34 @@ You can also check it out with the `rails console`
     Loading development environment (Rails 7.0.5)
     > Rails.application.importmap.class
     => Importmap::Map
+    > Rails.application.importmap.packages
+    =>
+    {"application"=>#<struct Importmap::Map::MappedFile name="application", path="application.js", preload=true>,
+    "@hotwired/turbo-rails"=>#<struct Importmap::Map::MappedFile name="@hotwired/turbo-rails", path="turbo.min.js", preload=true>,
+    "@hotwired/stimulus"=>#<struct Importmap::Map::MappedFile name="@hotwired/stimulus", path="stimulus.min.js", preload=true>,
+    "@hotwired/stimulus-loading"=>
+      #<struct Importmap::Map::MappedFile name="@hotwired/stimulus-loading", path="stimulus-loading.js", preload=true>,
+    "jquery"=>#<struct Importmap::Map::MappedFile name="jquery", path="jquery.js", preload=false>}
     > Rails.application.importmap.preloaded_module_paths(resolver: helper)
     =>
     ["/assets/application-05f01ae8.js",
     "/assets/turbo.min-f309baaf.js",
     "/assets/stimulus.min-d03cf1df.js",
     "/assets/stimulus-loading-1fc59770.js"]
+    > puts Rails.application.importmap.to_json(resolver: helper)
+    {
+      "imports": {
+        "application": "/assets/application-05f01ae8ad58cce103547a14e3295d1a03f1dda93058015ba3afac46c1526dd9.js",
+        "@hotwired/turbo-rails": "/assets/turbo.min-f309baafa3ae5ad6ccee3e7362118b87678d792db8e8ab466c4fa284dd3a4700.js",
+        "@hotwired/stimulus": "/assets/stimulus.min-d03cf1dff41d6c5698ec2c5d6a501615a7a33754dbeef8d1edd31c928d17c652.js",
+        "@hotwired/stimulus-loading": "/assets/stimulus-loading-1fc59770fb1654500044afd3f5f6d7d00800e5be36746d55b94a2963a7a228aa.js",
+        "jquery": "/assets/jquery-6059b4a1dbd223b4e85b70257b824c686de103cd2db58636e18cdec46f1aab6e.js",
+        "controllers/application": "/assets/controllers/application-368d98631bccbf2349e0d4f8269afb3fe9625118341966de054759d96ea86c7e.js",
+        "controllers/hello_controller": "/assets/controllers/hello_controller-549135e8e7c683a538c3d6d517339ba470fcfb79d62f738a0a089ba41851a554.js",
+        "controllers": "/assets/controllers/index-2db729dddcc5b979110e98de4b6720f83f91a123172e87281d5a58410fc43806.js"
+      }
+    }
     >
-
 The `Rails.application.importmap` contains the instance of the "drawn" importmap from evaluating the DSL.
 
 ## DSL Again: config/importmap.rb
