@@ -51,3 +51,4 @@ Notes:
 
 {% include config/reference/header.md %}
 {% include config/reference/cfn.md %}
+{% include config/reference/footer.md %}

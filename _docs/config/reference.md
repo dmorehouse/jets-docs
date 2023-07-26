@@ -17,11 +17,7 @@ api.cors_authorization_type  | nil | API Gateway default authorization_type for 
 api.endpoint_policy | nil | Note, required when endpoint_type is EDGE
 api.endpoint_type | EDGE | Endpoint type. IE: PRIVATE, EDGE, REGIONAL
 app.domain | nil | The app domain to use. Should be the domain only without the protocol. This applies at the controller-level, IE: methods like `redirect_to`
-assets.base_url | nil | Base url to use to serve assets. IE: https://cloudfront.com/my/base/path. By default this is the s3 website url that jets manages.
-assets.cache_control | nil | The cache control expiry. IE: `public, max-age=3600`. Note, `assets.max_age` is a shorter way to set cache_control.
-assets.folders | %w[assets images packs] | Folders to assets package and upload to s3
-assets.max_age | 3600 | Default max age on assets
-assets.webpacker_asset_host | s3_endpoint | Default uses the s3 endpoint url. You can set an explicit value if you need to override. Also if assets.base_url is use, that will be used. Precedence: 1. assets.webpacker_asset_host 2. assets.base_host 3. s3_endpoint
+{% include config/reference/assets.md %}
 autoload_paths | [] | Customize autoload paths. Add extra paths you want to Jets autoload.
 controllers.default_protect_from_forgery | true for html mode, false for api mode. | Whether or not to check for forgery protection
 controllers.filtered_parameters | [] | Parameters to filter in logging output

@@ -48,3 +48,6 @@ Jets.application.configure do
 end
 ```
 
+{% include config/reference/header.md %}
+{% include config/reference/assets.md %}
+{% include config/reference/footer.md %}
