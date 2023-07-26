@@ -10,8 +10,8 @@ Using the `asset_path` helper will serve the assets in the public folder from th
 
 Folder | Description | Checksum
 --- | --- | ---
-public/packs | Where webpacker assets are compiled to. You defined js and css files in `app/javascript/packs` and webpacker will compile, add checksums to the file names and save them to `public/packs`. You can also create images in `app/javascript/images` and have webpacker add the checksum to the images files. | Yes
-public/assets | Additional custom assets you might have. | No
+public/assets | Where sprockets-jets assets are compiled to. You defined js and css files in `app/assets` and sprockets will compile, add checksums to the file names and save them to `public/assets`. You can also create images have sprockets add the checksum to the images files. | Yes
+public/packs | Where **bin/webpack** assets are compiled to. You defined js and css files in `app/javascript/packs` and webpacker will compile, add checksums to the file names and save them to `public/packs`. You can also create images in `app/javascript/images` and have webpacker add the checksum to the images files. | Yes
 public/images | Public images. | No
 
 ## Example with asset_path

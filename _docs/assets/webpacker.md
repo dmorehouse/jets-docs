@@ -129,4 +129,4 @@ And viewing the html source should show something like this:
 
 ## Summary
 
-Using webpack with assets gives you the benefit of performance and automation. It can take some time to set up, though, and debugging webpack can be difficult since the ecosystem tends to move fast. You are often times better off upgrading the tools like yarn, node, and updating the configuration files. For innovation, fast-moving technologies are generally a good thing.
+Using webpack with assets gives you the benefit of performance and automation. It can take some time to set up, though, and debugging webpack can be difficult since the ecosystem tends to move fast. You are often times better off upgrading the tools like yarn, node, and updating the configuration files. This is sometimes the cost of innovation, fast-moving technologies tend to have more breakage.
