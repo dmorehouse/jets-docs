@@ -1,8 +1,8 @@
 ---
 title: "How Importmap Works: Rails"
-nav_text: How It Works
-category: assets-importmap
-order: 1
+nav_text: Rails
+category: assets
+order: 4
 ---
 
 These are some of my original notes on how importmap works with Rails, not Jets. A lot of these are repeated notes in the [importmap docs]({% link _docs/assets/importmap.md %}).  The importmap doc will be the most updated one. Keeping these old notes around for useful reference.
@@ -64,7 +64,7 @@ The `import "application"` loads `/assets/application-37f365cb.js`, which is the
 
 Note, the digested file is built from the original [sprockets-rails](https://github.com/rails/sprockets-rails) and [sprockets](https://github.com/rails/sprockets) libraries.
 
-Locally in development mode, sprockets compiles the digest file on-the-fly as part of the request. Sprockets is a "Rack-based asset packaging system". On production, sprockets serves **pre-compiled** assets. Lastly, spockets-rails integrates sprockets with rails.
+Locally in development mode, sprockets compiles the digest file on-the-fly as part of the request. Sprockets is a "Rack-based asset packaging system". On production, sprockets serves **precompiled** assets. Lastly, spockets-rails integrates sprockets with rails.
 
 Some light history: Sprockets is what handles asset packaging for Rails 3. Then the nodejs world evolved and created their own tools like webpack. So Rails introduced webpacker which uses webpack in Rails 5. In Rails 7, Rails is going back to the original sprockets asset packaging. What is old is now new again 🤣
 

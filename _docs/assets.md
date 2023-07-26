@@ -8,8 +8,8 @@ Jets handles asset like stylesheets, javascripts, and images by serving them fro
 
 Jets compiles assets with either:
 
-1. **Asset Pipeline (sprockets and importmap)**: The sprockets tool is used by Rails 7 to compile assets. Importmap is use to help map and serve the assets. This is the default for Jets v5 and beyond.
-2. **Webpack (webpacker/jetpacker)**: This is a javascript node native tool that was used in Rails 4,5,6 to compile assets. The webpack toolchain is deprecated and may be remove at any time. You should use the sprockets toolchain.
+1. [Asset Pipeline (sprockets and importmap)]({% link _docs/assets/importmap.md %}): The sprockets tool is used by Rails 7 to compile assets. Importmap is use to help map and serve the assets. This is the default for Jets v5 and beyond.
+2. [Webpack (webpacker/jetpacker)]({% link _docs/assets/webpack.md %}): This is a javascript node native tool that was used in Rails 4,5,6 to compile assets. The webpack toolchain is deprecated and may be remove at any time. You should use the sprockets toolchain.
 
 ## Pros and Cons
 
@@ -50,7 +50,7 @@ A few notes about the the public folders, `public/assets`, `public/images`, etc.
 
 Even though you and add files directly to these folders and Jets will uploaded and served them.  The files in these folders do not get sha checksums added to their paths automatically. This makes it more difficult to cache the assets with longer TTLs. Even with short TTLs, some browsers and devices like iPhone seem to cache images indefinitely. Asset precompiling will take your assets and add a sha checksum as part of the path.
 
-You should add the files to `app/assets` instead and allow Jets to precompile them as part of the deploy process.
+You should add the files to `app/assets` and `app/javascript` instead and allow Jets to precompile them as part of the deploy process.
 
 Folder | Description | Checksum
 --- | --- | ---

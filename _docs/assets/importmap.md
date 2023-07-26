@@ -2,15 +2,48 @@
 title: "Assets Serving: Importmap"
 nav_text: Importmap
 category: assets
-subcategory: assets-importmap
 order: 1
 ---
 
 In Jets v5, sprockets and importmap is the default way to handle assets like stylesheets, javascripts, and images.
 
-To help understand how importmap works, we'll cover in detail how it all works.
+## Usage: High Level
+
+In the view, you use the `javascript_importmap_tags` helper:
+
+app/views/layouts/application.html.erb
+
+    <%= javascript_importmap_tags %>
+
+For your source code, you define them in these folders:
+
+    app
+    ├── assets
+    │   ├── config
+    │   │   └── manifest.js
+    │   ├── images
+    │   ├── javascripts
+    │   └── stylesheets
+    │       └── application.css
+    └── javascript
+        └── application.js
+
+The `manifest.js` contain special comment directives that tell sprockets how to build the the final `public/assets/manifest-7c370d953.js` that contain the javascript assets. Example:
+
+app/assets/config/manifest.js
+
+```javascript
+//= link_tree ../images
+//= link_directory ../stylesheets .css
+//= link_tree ../javascripts .js
+//= link_tree ../../javascript .js
+```
+
+Here's the docs for the directives: [rails/sprockets#directives](https://github.com/rails/sprockets#directives).
 
 ## Importmap Loading Trace
+
+To help understand how importmap works, we'll cover in detail how it all works.
 
 In the view, you use a helper:
 
@@ -20,25 +53,19 @@ app/views/layouts/application.html.erb
 
 The rendered HTML looks something like this:
 
+
     <script type="importmap" data-turbo-track="reload">
     {
       "imports": {
-        "application": "/assets/application-37f365cb.js",
-        "@hotwired/turbo-rails": "/assets/turbo.min-f309baaf.js",
-        "@hotwired/stimulus": "/assets/stimulus.min-d03cf1df.js",
-        "@hotwired/stimulus-loading": "/assets/stimulus-loading-1fc59770.js",
-        "controllers/application": "/assets/controllers/application-368d9863.js",
-        "controllers/hello_controller": "/assets/controllers/hello_controller-549135e8.js",
-        "controllers": "/assets/controllers/index-2db729dd.js"
+        "application": "/assets/application-561a5525.js",
+        "jquery": "https://ga.jspm.io/npm:jquery@3.7.0/dist/jquery.js",
+        "@rubyonjets/ujs-compat": "https://ga.jspm.io/npm:@rubyonjets/ujs-compat@1.1.0/index.js"
       }
     }
     </script>
-    <link rel="modulepreload" href="/assets/application-37f365cb.js">
-    <link rel="modulepreload" href="/assets/turbo.min-f309baaf.js">
-    <link rel="modulepreload" href="/assets/stimulus.min-d03cf1df.js">
-    <link rel="modulepreload" href="/assets/stimulus-loading-1fc59770.js">
-    <script src="/assets/es-module-shims.min-4ca9b3dd.js" async="async" data-turbo-track="reload"></script>
-    <script type="module">import "application"</script> <!-- SINGLE POINT OF ENTRY -->
+    <link rel="modulepreload" href="/assets/application-561a5525.js">
+    <script src="/assets/es-module-shims.min-c6977838.js" async="async" data-turbo-track="reload"></script>
+    <script type="module">import "application"</script>
 
 The last line above contains the **single point-of-entry**. Repeated here:
 
@@ -49,7 +76,7 @@ The **importmap** definition is defined at the top. Repeated here as a snippet f
     <script type="importmap" data-turbo-track="reload">
     {
       "imports": {
-        "application": "/assets/application-37f365cb.js",
+        "application": "/assets/application-561a5525.js",
         ...
       }
     }
@@ -57,17 +84,13 @@ The **importmap** definition is defined at the top. Repeated here as a snippet f
 
 As the name suggests, it tells Javascript where to load files when you use the `import` keyword in your javascript source code.
 
-The `import "application"` loads `/assets/application-37f365cb.js`, which is the digested version that sprockets created from `app/javascript/application.js`.
+The `import "application"` loads `/assets/application-561a5525.js`, which is the digested version that sprockets created from `app/javascript/application.js`.
 
 **Essentially**: `import "application" => app/javascript/application.js`
 
 ## Sprockets Digest Files
 
-Note, the digested file is built from the original [sprockets-rails](https://github.com/rails/sprockets-rails) and [sprockets](https://github.com/rails/sprockets) libraries.
-
-Locally in development mode, sprockets compiles the digest file on-the-fly as part of the request. Sprockets is a "Rack-based asset packaging system". On production, sprockets serves **pre-compiled** assets. Lastly, spockets-rails integrates sprockets with rails.
-
-Some light history: Sprockets is what handles asset packaging for Rails 3. Then the nodejs world evolved and created their own tools like webpack. So Rails introduced webpacker which uses webpack in Rails 5. In Rails 7, Rails is going back to the original sprockets asset packaging. What is old is now new again 🤣
+The  [sprockets-jets](https://github.com/boltops-tools/sprockets-jets) gem integrates [sprockets](https://github.com/rails/sprockets) with jets. Locally in development mode, sprockets compiles the digest file on-the-fly as part of the request. Sprockets is a "Rack-based asset packaging system". On production, sprockets serves **precompiled** assets.
 
 ## Single Point-of-Entry to Javascript World
 
@@ -80,17 +103,20 @@ Whatever you've defined in your `application.js` is loaded via **pure Javascript
 app/javascript/application.js
 
 ```javascript
-import "@hotwired/turbo-rails"
-import "controllers"
+import jquery from 'jquery'
+window.$ = jquery
+import Jets from "@rubyonjets/ujs-compat"
+Jets.start()
 ```
 
-So where does the `@hotwired/turbo-rails` and `controllers` come from? Again, back to the original `<script type="importmap">` above. Here's a relevant snippet:
+So where does the `jquery` and `@rubyonjets/ujs-compat` come from? Again, back to the original `<script type="importmap">` above. Here's a relevant snippet:
 
-```javascript
+```json
 {
   "imports": {
-    @hotwired/turbo-rails => /assets/turbo.min-f309baaf.js
-    controllers => /assets/controllers/index-2db729dd.js
+    "application": "/assets/application-561a5525.js",
+    "jquery": "https://ga.jspm.io/npm:jquery@3.7.0/dist/jquery.js",
+    "@rubyonjets/ujs-compat": "https://ga.jspm.io/npm:@rubyonjets/ujs-compat@1.1.0/index.js"
   }
 }
 ```
@@ -113,20 +139,19 @@ config/importmap.rb
 
 ```ruby
 pin "application", preload: true
-pin "@hotwired/turbo-rails", to: "turbo.min.js", preload: true
-pin "@hotwired/stimulus", to: "stimulus.min.js", preload: true
-pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
+pin "jquery", to: "https://ga.jspm.io/npm:jquery@3.7.0/dist/jquery.js", preload: true
+pin "@rubyonjets/ujs-compat", to: "https://ga.jspm.io/npm:@rubyonjets/ujs-compat@1.1.0/index.js", preload: true
 pin_all_from "app/javascript/controllers", under: "controllers"
 ```
 
 The DSL is the **source-of-truth** for the importmap. It is your responsibility to add pins to the `config/importmap.rb` when you introduce a new `import MODULE` in your javascript source code. The DSL is how you tell Javascript where `import MODULE` should load the javascript files from.
 
-The `pin` method `to` option points to a file name with or without the extension. The files can be in any of the searched `assets.paths`, IE: `app/javascript` and `vendor/javascript`, as defined by the [importmap-rails engine](https://github.com/rails/importmap-rails/blob/9eec49a9ea3feaab224871437cf1bc2479801796/lib/importmap/engine.rb#L47-L48).
+The `pin` method `to` option points to a URLs above. The `pin` method `to` option can also point to a file name with or without the extension. The files can be in any of the searched `assets.paths`, IE: `app/javascript` and `vendor/javascript`, as defined by the [importmap-jets engine](https://github.com/boltops-tools/importmap-jets/blob/main/lib/importmap_jets/engine.rb#L26-L27).
 
-The `javascript_importmap_tags` helper evaluates the DSL and uses sprockets to generate the digest map ahead of time. This is provided by the [importmap-rails](https://github.com/rails/importmap-rails) gem. Some useful files to take a look at:
+The `javascript_importmap_tags` helper evaluates the DSL and uses sprockets to generate the digest map ahead of time. This is provided by the [importmap-jets](https://github.com/boltops-tools/importmap-jets) gem. Some useful files to take a look at:
 
-* [app/helpers/importmap/importmap_tags_helper.rb](https://github.com/rails/importmap-rails/blob/main/app/helpers/importmap/importmap_tags_helper.rb): The `javascript_importmap_tags` helper.
-* [lib/importmap/map.rb](https://github.com/rails/importmap-rails/blob/main/lib/importmap/map.rb): DSL Processing of your `config/importmap.rb`.
+* [app/helpers/importmap/importmap_tags_helper.rb](https://github.com/boltops-tools/importmap-jets/blob/main/app/helpers/importmap/importmap_tags_helper.rb): The `javascript_importmap_tags` helper.
+* [lib/importmap/map.rb](https://github.com/boltops-tools/importmap/blob/main/lib/importmap/map.rb): DSL Processing of your `config/importmap.rb`.
 
 ## Rails importmap Debugging: CLI and Console
 
@@ -135,51 +160,30 @@ You can see the JSON snippet with the `bin/importmap` CLI:
     ❯ bin/importmap json
     {
       "imports": {
-        "application": "/assets/application-05f01ae8.js",
-        "@hotwired/turbo-rails": "/assets/turbo.min-f309baaf.js",
-        "@hotwired/stimulus": "/assets/stimulus.min-d03cf1df.js",
-        "@hotwired/stimulus-loading": "/assets/stimulus-loading-1fc59770.js",
-        "controllers/application": "/assets/controllers/application-368d9863.js",
-        "controllers/hello_controller": "/assets/controllers/hello_controller-549135e8.js",
-        "controllers": "/assets/controllers/index-2db729dd.js"
+        "application": "/assets/application-561a5525.js",
+        "jquery": "https://ga.jspm.io/npm:jquery@3.7.0/dist/jquery.js",
+        "@rubyonjets/ujs-compat": "https://ga.jspm.io/npm:@rubyonjets/ujs-compat@1.1.0/index.js"
       }
     }
 
-You can also check it out with the `rails console`
+You can also check it out with the `jets console`
 
-    ❯ rails console
-    Loading development environment (Rails 7.0.5)
-    > Rails.application.importmap.class
+    ❯ jets console
+    Jets booting up in development mode!
+    > Jets.application.importmap.class
     => Importmap::Map
-    > Rails.application.importmap.packages
+    > Jets.application.importmap.packages
     =>
     {"application"=>#<struct Importmap::Map::MappedFile name="application", path="application.js", preload=true>,
-    "@hotwired/turbo-rails"=>#<struct Importmap::Map::MappedFile name="@hotwired/turbo-rails", path="turbo.min.js", preload=true>,
-    "@hotwired/stimulus"=>#<struct Importmap::Map::MappedFile name="@hotwired/stimulus", path="stimulus.min.js", preload=true>,
-    "@hotwired/stimulus-loading"=>
-      #<struct Importmap::Map::MappedFile name="@hotwired/stimulus-loading", path="stimulus-loading.js", preload=true>,
-    "jquery"=>#<struct Importmap::Map::MappedFile name="jquery", path="jquery.js", preload=false>}
-    > Rails.application.importmap.preloaded_module_paths(resolver: helper)
-    =>
-    ["/assets/application-05f01ae8.js",
-    "/assets/turbo.min-f309baaf.js",
-    "/assets/stimulus.min-d03cf1df.js",
-    "/assets/stimulus-loading-1fc59770.js"]
-    > puts Rails.application.importmap.to_json(resolver: helper)
-    {
-      "imports": {
-        "application": "/assets/application-05f01ae8ad58cce103547a14e3295d1a03f1dda93058015ba3afac46c1526dd9.js",
-        "@hotwired/turbo-rails": "/assets/turbo.min-f309baafa3ae5ad6ccee3e7362118b87678d792db8e8ab466c4fa284dd3a4700.js",
-        "@hotwired/stimulus": "/assets/stimulus.min-d03cf1dff41d6c5698ec2c5d6a501615a7a33754dbeef8d1edd31c928d17c652.js",
-        "@hotwired/stimulus-loading": "/assets/stimulus-loading-1fc59770fb1654500044afd3f5f6d7d00800e5be36746d55b94a2963a7a228aa.js",
-        "jquery": "/assets/jquery-6059b4a1dbd223b4e85b70257b824c686de103cd2db58636e18cdec46f1aab6e.js",
-        "controllers/application": "/assets/controllers/application-368d98631bccbf2349e0d4f8269afb3fe9625118341966de054759d96ea86c7e.js",
-        "controllers/hello_controller": "/assets/controllers/hello_controller-549135e8e7c683a538c3d6d517339ba470fcfb79d62f738a0a089ba41851a554.js",
-        "controllers": "/assets/controllers/index-2db729dddcc5b979110e98de4b6720f83f91a123172e87281d5a58410fc43806.js"
-      }
-    }
+    "jquery"=>#<struct Importmap::Map::MappedFile name="jquery", path="https://ga.jspm.io/npm:jquery@3.7.0/dist/jquery.js", preload=false>,
+    "@rubyonjets/ujs-compat"=>
+      #<struct Importmap::Map::MappedFile
+      name="@rubyonjets/ujs-compat",
+      path="https://ga.jspm.io/npm:@rubyonjets/ujs-compat@1.1.0/index.js",
+      preload=false>}
     >
-The `Rails.application.importmap` contains the instance of the "drawn" importmap from evaluating the DSL.
+
+The `Jets.application.importmap` contains the instance of the "drawn" importmap from evaluating the DSL.
 
 ## DSL Again: config/importmap.rb
 
@@ -189,9 +193,8 @@ config/importmap.rb
 
 ```ruby
 pin "application", preload: true
-pin "@hotwired/turbo-rails", to: "turbo.min.js", preload: true
-pin "@hotwired/stimulus", to: "stimulus.min.js", preload: true
-pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
+pin "jquery", to: "https://ga.jspm.io/npm:jquery@3.7.0/dist/jquery.js", preload: true
+pin "@rubyonjets/ujs-compat", to: "https://ga.jspm.io/npm:@rubyonjets/ujs-compat@1.1.0/index.js", preload: true
 pin_all_from "app/javascript/controllers", under: "controllers"
 ```
 
@@ -199,7 +202,7 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 
 In the `importmap.rb` DSL, you can see usage of `preload: true` options. This tells `javascript_importmap_tags` to generate the `<link rel="modulepreload"` tags. IE:
 
-    <link rel="modulepreload" href="/assets/application-37f365cb.js">
+    <link rel="modulepreload" href="/assets/application-561a5525.js">
 
 It does what it sounds like. It preloads the javascript files right when the page loads in parallel. Otherwise, importmap won't load the javascript files until it encounters them serially in `application.js`.
 
@@ -208,17 +211,18 @@ Here's a snippet of the `application.js` repeated for clarity:
 app/javascript/application.js
 
 ```javascript
-import "@hotwired/turbo-rails"
-import "controllers"
+import jquery from 'jquery'
+// ...
+import Jets from "@rubyonjets/ujs-compat"
 ```
 
 Each `import` makes a network call to load the javascript file. Waiting for each network call and loading them serially would take longer.
 
 ### pin_all_from
 
-The `pin_all_from` method in the DSL produces multiple importmap items:
+The `pin_all_from` method in the DSL produces multiple importmap items. Here's an example if files are defined in `app/javascript/controllers`:
 
-    "controllers/application": "/assets/controllers/application-368d9863.js",
+    "controllers/application": "/assets/controllers/application-561a5525.js",
     "controllers/hello_controller": "/assets/controllers/hello_controller-549135e8.js",
     "controllers": "/assets/controllers/index-2db729dd.js"
 

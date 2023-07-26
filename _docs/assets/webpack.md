@@ -1,6 +1,6 @@
 ---
 title: "Assets Serving: Webpack"
-nav_text: Webpacker
+nav_text: Webpack
 category: assets
 order: 2
 ---
@@ -20,8 +20,6 @@ There are also some downsides with using webpacker, though:
 * Webpacker and the node world tend to move very rapidly. As such, it tends to feel like the wild west at times.
 * This is the nature of the beast. Moving fast can break things. Configurations like `babel.config.js`, `.browserslistrc`, `config/webpacker/environment.js`, `postcss.config.js`, `config/webpacker.yml` interfaces can change. Here are just some examples: [webpacker 2059](https://github.com/rails/webpacker/issues/2059), [webpacker 2202](https://github.com/rails/webpacker/issues/2202), [webpacker 2342](https://github.com/rails/webpacker/issues/2342), [jetpacker 4](https://github.com/tongueroo/jetpacker/pull/4)
 * If you're not keeping up with the changes of the ecosystem, it is sometimes faster to treat things like black box. IE: Upgrade yarn, node, and regenerate the configuration files and see if that fixes issues.
-
-All that being said, it is recommended that you take advantage of webpack for the benefits.
 
 ## How To Tutorial
 
