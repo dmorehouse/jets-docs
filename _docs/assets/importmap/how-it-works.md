@@ -1,11 +1,13 @@
 ---
-title: "How Importmap Works"
+title: "How Importmap Works: Rails"
 nav_text: How It Works
 category: assets-importmap
 order: 1
 ---
 
-We'll cover how importmap works.
+These are some of my notes on how importmap works with Rails, not Jets. They're useful for reference.
+
+In Rails 7, importmap is the new way to serve assets. One of the key benefits of this is that you don't need to use node to compile assets. We'll cover how importmap works.
 
 ## Importmap Loading Trace
 
@@ -35,27 +37,36 @@ The rendered HTML looks something like this:
     <link rel="modulepreload" href="/assets/stimulus.min-d03cf1df.js">
     <link rel="modulepreload" href="/assets/stimulus-loading-1fc59770.js">
     <script src="/assets/es-module-shims.min-4ca9b3dd.js" async="async" data-turbo-track="reload"></script>
-    <script type="module">import "application"</script>
+    <script type="module">import "application"</script> <!-- SINGLE POINT OF ENTRY -->
 
 The last line above contains the **single point-of-entry**. Repeated here:
 
     <script type="module">import "application"</script>
 
-The **importmap** definition is defined at the top. Repeated here without the `data-turbo-track="reload"` for clarity and conciseness:
+The **importmap** definition is defined at the top. Repeated here as a snippet for clarity and conciseness:
 
-    <script type="importmap">...</script>
+    <script type="importmap" data-turbo-track="reload">
+    {
+      "imports": {
+        "application": "/assets/application-37f365cb.js",
+        ...
+      }
+    }
+    </script>
 
 As the name suggests, it tells Javascript where to load files when you use the `import` keyword in your javascript source code.
 
-The `import "application"` loads `/assets/application-37f365cb.js`, which is the digested `app/javascript/application.js`.
+The `import "application"` loads `/assets/application-37f365cb.js`, which is the digested version that sprockets created from `app/javascript/application.js`.
 
 **Essentially**: `import "application" => app/javascript/application.js`
 
 ## Sprockets Digest Files
 
-Note, the digested file is built from the original [sprockets-rails](https://github.com/rails/sprockets-rails) and [sprockets](https://github.com/rails/sprockets) libraries. What is old is now new again 🤣
+Note, the digested file is built from the original [sprockets-rails](https://github.com/rails/sprockets-rails) and [sprockets](https://github.com/rails/sprockets) libraries.
 
-Locally in development mode, sprockets compiles the digest file on-the-fly as part of the request. Remember, sprockets is a "Rack-based asset packaging system". On production, sprockets serves **pre-compiled** assets. Lastly, spockets-rails integrates sprockets with rails.
+Locally in development mode, sprockets compiles the digest file on-the-fly as part of the request. Sprockets is a "Rack-based asset packaging system". On production, sprockets serves **pre-compiled** assets. Lastly, spockets-rails integrates sprockets with rails.
+
+Some light history: Sprockets is what handles asset packaging for Rails 3. Then the nodejs world evolved and created their own tools like webpack. So Rails introduced webpacker which uses webpack in Rails 5. In Rails 7, Rails is going back to the original sprockets asset packaging. What is old is now new again 🤣
 
 ## Single Point-of-Entry to Javascript World
 
@@ -86,10 +97,10 @@ So where does the `@hotwired/turbo-rails` and `controllers` come from? Again, ba
 Once we pass the single point-of-entry, the cycle repeats itself.
 
 1. Javascript import some file
-2. Back to importmap
-3. Javascript import some file - possibly again until no more import keywords
+2. Back to the importmap definition
+3. Javascript import some file - possibly continue again until there no more import keywords
 
-It's interesting to note that everything you've seen aside from the initial helper `<%= javascript_importmap_tags %>` done with **pure Javascript**. Everything that was necessary calculated ahead of time to generate the HTML script importmap tag and kick off the single point-of-entry `import "application"`` javascript call.
+It's interesting to note that everything you've seen aside from the initial helper `<%= javascript_importmap_tags %>` done with **pure Javascript**. Everything that's necessary was calculated ahead of time to generate the HTML script importmap tag and kick off the single point-of-entry `import "application"` javascript call.
 
 ## Ruby DSL: config/importmap.rb
 
@@ -108,6 +119,8 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 ```
 
 The DSL is the **source-of-truth** for the importmap. It is your responsibility to add pins to the `config/importmap.rb` when you introduce a new `import MODULE` in your javascript source code. The DSL is how you tell Javascript where `import MODULE` should load the javascript files from.
+
+The `pin` method `to` option points to a file name with or without the extension. The files can be in any of the searched `assets.paths`, IE: `app/javascript` and `vendor/javascript`, as defined by the [importmap-rails engine](https://github.com/rails/importmap-rails/blob/9eec49a9ea3feaab224871437cf1bc2479801796/lib/importmap/engine.rb#L47-L48).
 
 The `javascript_importmap_tags` helper evaluates the DSL and uses sprockets to generate the digest map ahead of time. This is provided by the [importmap-rails](https://github.com/rails/importmap-rails) gem. Some useful files to take a look at:
 
@@ -187,7 +200,9 @@ In the `importmap.rb` DSL, you can see usage of `preload: true` options. This te
 
     <link rel="modulepreload" href="/assets/application-37f365cb.js">
 
-It does what it sounds like. It preloads the javascript files right when the page loads in parallel. Otherwise, importmap won't load the javascript files until it encounters them serially in `application.js`. Repeated for clarity:
+It does what it sounds like. It preloads the javascript files right when the page loads in parallel. Otherwise, importmap won't load the javascript files until it encounters them serially in `application.js`.
+
+Here's a snippet of the `application.js` repeated for clarity:
 
 app/javascript/application.js
 
@@ -195,6 +210,8 @@ app/javascript/application.js
 import "@hotwired/turbo-rails"
 import "controllers"
 ```
+
+Each `import` makes a network call to load the javascript file. Waiting for each network call and loading them serially would take longer.
 
 ### pin_all_from
 
@@ -216,9 +233,9 @@ It's all the files within the `app/javascript/controllers` folder.
 How Javascript importmap loading works:
 
 1. Point of entry: `import "application"`.
-2. The importmap from `<script type="importmap">` essentially points `application` to `app/javascript/application.js`.
+2. The importmap from `<script type="importmap">` points `application` to `app/javascript/application.js`.
 3. From that point on, it's pure Javascript import and loading.
 4. If more `import` are keywords are found in `application.js`, they get loaded via the same importmap defined at the top.
-5. The cycle repeats until there are no more `import` keywords are encountered.
+5. The cycle repeats until no more `import` keywords are encountered.
 
-The DSL in `config/importmap.rb` is the source-of-truth and defines where module files should come from. You should update it when you add and use `import` keywords in your javascript files like `app/javascript/application.js`.
+The DSL in `config/importmap.rb` is the source-of-truth and defines where module files should come from. You should update it when you add and use `import` keywords in your javascript files like `app/javascript/application.js`. You can use `bin/importmap pin` and `bin/importmap unpin` to manage `config/importmap.rb`.
