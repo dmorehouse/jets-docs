@@ -4,33 +4,25 @@ subcategory: assets
 order: 1
 ---
 
-Jets handles asset serving by uploading asset files to s3 and serving them directly from s3. This is particularly beneficial for binary assets like images as s3 is better suited for serving them.
+Jets handles asset like stylesheets, javascripts, and images by serving them from s3. When Jets deploys, it compiles assets and uploads them to the Jets managed s3 bucket. When your app is running on AWS Lambda, the Jets helper methods like `stylesheet_link_tag`, `javascript_include_tag`, `javascript_importmap_tags`, `asset_path`, etc will point to the s3 bucket url. You can also configure settings so that the assets are served from a CDN like CloudFront that you manage yourself.
 
-Using the `asset_path` helper will serve the assets in the public folder from the filesystem locally and from s3 remotely. By default, the `public` folder is automatically uploaded to s3 as part of the `jets deploy` command.  Here are some notable folders within the `public` folder.
+Jets compiles assets with either:
 
-Folder | Description | Checksum
---- | --- | ---
-public/assets | Where sprockets-jets assets are compiled to. You defined js and css files in `app/assets` and sprockets will compile, add checksums to the file names and save them to `public/assets`. You can also create images have sprockets add the checksum to the images files. | Yes
-public/packs | Where **bin/webpack** assets are compiled to. You defined js and css files in `app/javascript/packs` and webpacker will compile, add checksums to the file names and save them to `public/packs`. You can also create images in `app/javascript/images` and have webpacker add the checksum to the images files. | Yes
-public/images | Public images. | No
+1. **Asset Pipeline (sprockets and importmap)**: The sprockets tool is used by Rails 7 to compile assets. Importmap is use to help map and serve the assets. This is the default for Jets v5 and beyond.
+2. **Webpack (webpacker/jetpacker)**: This is a javascript node native tool that was used in Rails 4,5,6 to compile assets. The webpack toolchain is deprecated and may be remove at any time. You should use the sprockets toolchain.
 
-## Example with asset_path
+## Pros and Cons
 
-app/views/layouts/application.html:
+There several benefits to precompling assets and serving them directly.
 
-```erb
-<link rel="stylesheet" href="<%= asset_path("/assets/my-min-asset.css") %>">
-```
+* A sha checksums is added to the assets as a part of building them to the `public/assets` folder.  The checksums optimize performance since images can be cached for very long periods of time. IE: 10y.
+* You'll be able to configure high values for the `max-age` response header. This article [Increasing Application Performance with HTTP Cache Headers](https://devcenter.heroku.com/articles/increasing-application-performance-with-http-cache-headers) covers how cache headers work.  The default max-age for assets serving out of s3 is 3600s or 1h.
+* If you replace an image and keep the same name, you don't have to update the code as the `image_tag` uses the compiled image with the sha checksum. It's nice to offload menial tasks like file renames to automation. Instead, we can spend the precious mental energy on coding business logic.
+* Binary images are particularly beneficial to be served by s3. Though APIGW can serve binary assets, found it to be a pain and sometimes the client requesting the asset needs to send a specific accept header as part of the request, which you don't always have control over.
 
-When deployed to lambda, the file is served out of s3 and looks like this:
+Usually the downside with asset precompling is:
 
-```html
-<link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/demo-dev-s3bucket-6nnjmcsxgjrx/jets/public/assets/my-min-asset.css">
-```
-
-## Caching Considerations
-
-Even though `public/assets` and `public/images` files are uploaded and served for convenience.  There's a cavaet with the approach. The files in the `public/assets` and `public/images` do not get sha checksum added to their paths.  This makes it more difficult to cache the assets with longer TTLs. Even with short TTLs, some browsers and devices like iPhone seem to cache images indefinitely.  Consider using webpacker for your assets so that sha checksum are include as part of the path. Note, webpacker has it's own cavaets. See: [Assets Serving: Webpack]({% link _docs/assets/webpacker.md %}).
+* Complexity. You usually have to precompile and upload the assets as part of your deploy process. Jets fortunately handles this for you.
 
 ## Configure Settings
 
@@ -51,3 +43,17 @@ end
 {% include config/reference/header.md %}
 {% include config/reference/assets.md %}
 {% include config/reference/footer.md %}
+
+## Public Folder Uploads Caching Notes
+
+A few notes about the the public folders, `public/assets`, `public/images`, etc. These public folders are uploaded to s3 by default as a part of the Jets deploy process.
+
+Even though you and add files directly to these folders and Jets will uploaded and served them.  The files in these folders do not get sha checksums added to their paths automatically. This makes it more difficult to cache the assets with longer TTLs. Even with short TTLs, some browsers and devices like iPhone seem to cache images indefinitely. Asset precompiling will take your assets and add a sha checksum as part of the path.
+
+You should add the files to `app/assets` instead and allow Jets to precompile them as part of the deploy process.
+
+Folder | Description | Checksum
+--- | --- | ---
+public/assets | Where sprockets-jets assets are compiled to. You defined js and css files in `app/assets` and sprockets will compile, add checksums to the file names and save them to `public/assets`. You can also create images have sprockets add the checksum to the images files. | Yes
+public/packs | Where `bin/webpack` assets are compiled to. You defined js and css files in `app/javascript/packs` and webpacker will compile, add checksums to the file names and save them to `public/packs`. You can also create images in `app/javascript/images` and have webpacker add the checksum to the images files. | Yes
+public/images | Public images. | No

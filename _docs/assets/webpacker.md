@@ -2,8 +2,10 @@
 title: "Assets Serving: Webpack"
 nav_text: Webpacker
 category: assets
-order: 99
+order: 2
 ---
+
+In Jets v4 and below, webpacker/jetpacker is used to compile assets for uploading to s3. Jets v5 deprecates webpack and you should use the [assets pipeline/sprockets/importmap]({% link _docs/assets/importmap.md %}) instead.
 
 ## Pros and Cons
 
@@ -16,7 +18,7 @@ There several benefits to using webpack to build assets like images.
 There are also some downsides with using webpacker, though:
 
 * Webpacker and the node world tend to move very rapidly. As such, it tends to feel like the wild west at times.
-* This is the nature of the beast. Moving fast can break things. Configurations like `babel.config.js`, `.browserslistrc`, `config/webpacker/environment.js`, `postcss.config.js`, `config/webpacker.yml` interfaces can change. Here are just some examples: [2059](https://github.com/rails/webpacker/issues/2059), [2202](https://github.com/rails/webpacker/issues/2202), [2342](https://github.com/rails/webpacker/issues/2342)
+* This is the nature of the beast. Moving fast can break things. Configurations like `babel.config.js`, `.browserslistrc`, `config/webpacker/environment.js`, `postcss.config.js`, `config/webpacker.yml` interfaces can change. Here are just some examples: [webpacker 2059](https://github.com/rails/webpacker/issues/2059), [webpacker 2202](https://github.com/rails/webpacker/issues/2202), [webpacker 2342](https://github.com/rails/webpacker/issues/2342), [jetpacker 4](https://github.com/tongueroo/jetpacker/pull/4)
 * If you're not keeping up with the changes of the ecosystem, it is sometimes faster to treat things like black box. IE: Upgrade yarn, node, and regenerate the configuration files and see if that fixes issues.
 
 All that being said, it is recommended that you take advantage of webpack for the benefits.
@@ -96,6 +98,22 @@ To double-check that the assets are compiling correctly, run `bin/webpack` and c
       "media/southpark/eric.png": "/packs/media/southpark/eric-6809100c.png",
       "media/southpark/stan.png": "/packs/media/southpark/stan-91559ff6.png",
     $
+
+## Example with asset_path
+
+You can also use the `asset_path` helper to serve the assets in the public folder from the filesystem locally and from s3 remotely. By default, the `public` folder is automatically uploaded to s3 as part of the `jets deploy` command.  Here an example:
+
+app/views/layouts/application.html:
+
+```erb
+<link rel="stylesheet" href="<%= asset_path("/assets/my-min-asset.css") %>">
+```
+
+When deployed to lambda, the file is served out of s3 and looks like this:
+
+```html
+<link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/demo-dev-s3bucket-6nnjmcsxgjrx/jets/public/assets/my-min-asset.css">
+```
 
 ## Cache Headers
 

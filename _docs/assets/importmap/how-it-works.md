@@ -5,7 +5,7 @@ category: assets-importmap
 order: 1
 ---
 
-These are some of my notes on how importmap works with Rails, not Jets. They're useful for reference.
+These are some of my original notes on how importmap works with Rails, not Jets. A lot of these are repeated notes in the [importmap docs]({% link _docs/assets/importmap.md %}).  The importmap doc will be the most updated one. Keeping these old notes around for useful reference.
 
 In Rails 7, importmap is the new way to serve assets. One of the key benefits of this is that you don't need to use node to compile assets. We'll cover how importmap works.
 
