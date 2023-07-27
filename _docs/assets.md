@@ -11,6 +11,8 @@ Jets compiles assets with either:
 1. [Asset Pipeline (sprockets and importmap)]({% link _docs/assets/importmap.md %}): The sprockets tool is used by Rails 7 to compile assets. Importmap is use to help map and serve the assets. This is the default for Jets v5 and beyond.
 2. [Webpack (webpacker/jetpacker)]({% link _docs/assets/webpack.md %}): This is a javascript node native tool that was used in Rails 4,5,6 to compile assets. The webpack toolchain is deprecated and may be remove at any time. You should use the sprockets toolchain.
 
+If you're interested in why the new default, see: [Why: Importmap vs Webpack]({% link _docs/assets/why.md %}).
+
 ## Pros and Cons
 
 There several benefits to precompling assets and serving them directly.

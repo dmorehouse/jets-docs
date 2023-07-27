@@ -19,6 +19,7 @@ api.endpoint_type | EDGE | Endpoint type. IE: PRIVATE, EDGE, REGIONAL
 app.domain | nil | The app domain to use. Should be the domain only without the protocol. This applies at the controller-level, IE: methods like `redirect_to`
 {% include config/reference/assets.md %}
 autoload_paths | [] | Customize autoload paths. Add extra paths you want to Jets autoload.
+build.prebundle_copy | [] | Paths to copy over to the code cache area before `bundle install`. Useful for copying gems in Gemfile with a local relative path source.
 controllers.default_protect_from_forgery | true for html mode, false for api mode. | Whether or not to check for forgery protection
 controllers.filtered_parameters | [] | Parameters to filter in logging output
 {% include config/reference/cfn.md %}
